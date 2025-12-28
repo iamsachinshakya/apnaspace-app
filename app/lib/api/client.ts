@@ -5,6 +5,9 @@ import { createApiClient } from "./createApiClient";
    Service URLs (Next.js public env vars)
 ---------------------------------------------------- */
 export const SERVICE_URLS = {
+    API_GATEWAY:
+        process.env.NEXT_PUBLIC_API_GATEWAY_URL ??
+        "https://apnaspace-gateway-service.vercel.app",
     AUTH:
         process.env.NEXT_PUBLIC_AUTH_API_URL ??
         "http://localhost:5001/api/v1",
@@ -27,7 +30,7 @@ export const SERVICE_URLS = {
    Auth Client (NO refresh loop)
 ---------------------------------------------------- */
 export const authClient = axios.create({
-    baseURL: SERVICE_URLS.AUTH,
+    baseURL: SERVICE_URLS.API_GATEWAY,
     headers: { "Content-Type": "application/json" },
     withCredentials: true,
 });
@@ -35,14 +38,14 @@ export const authClient = axios.create({
 /* ----------------------------------------------------
    API Clients (Refresh handled via authClient)
 ---------------------------------------------------- */
-export const userClient = createApiClient(SERVICE_URLS.USER, {
+export const userClient = createApiClient(SERVICE_URLS.API_GATEWAY, {
     refreshClient: authClient,
 });
 
-export const categoryClient = createApiClient(SERVICE_URLS.CATEGORY, {
+export const categoryClient = createApiClient(SERVICE_URLS.API_GATEWAY, {
     refreshClient: authClient,
 });
 
-export const blogClient = createApiClient(SERVICE_URLS.BLOG, {
+export const blogClient = createApiClient(SERVICE_URLS.API_GATEWAY, {
     refreshClient: authClient,
 });
