@@ -15,67 +15,6 @@ export const userService = {
 
 
     // ---------------------------------------------------
-    // GET ALL USERS (ADMIN)
-    // GET /users
-    // ---------------------------------------------------
-    getAllUsers: async (): Promise<
-        HandleResponseDTO<PaginatedData<IUserDashboard>>
-    > => {
-        try {
-            const { data } =
-                await userClient.get<HandleResponseDTO<PaginatedData<IUserDashboard>>>(
-                    "/users"
-                );
-
-            if (!data.success) {
-                return handleErrorDTO(
-                    data.message || "Failed to fetch users",
-                    data.statusCode,
-                    data.errors,
-                    data.meta
-                );
-            }
-
-            return handleSuccessDTO(data.data!, "Users fetched successfully");
-        } catch (err: any) {
-            const msg = err.message ?? "Failed to fetch users";
-            return unhandledErrorDTO(msg, err.response?.data?.errors);
-        }
-    },
-
-
-    // ---------------------------------------------------
-    // DELETE USER BY ID (ADMIN)
-    // DELETE /users/:id
-    // ---------------------------------------------------
-    deleteUserById: async (
-        userId: string
-    ): Promise<HandleResponseDTO<null>> => {
-        try {
-            const { data } =
-                await userClient.delete<HandleResponseDTO<null>>(
-                    `/users/${userId}`
-                );
-
-            if (!data.success) {
-                return handleErrorDTO(
-                    data.message || "Failed to delete user",
-                    data.statusCode,
-                    data.errors,
-                    data.meta
-                );
-            }
-
-            return handleSuccessDTO(null, "User deleted successfully");
-        } catch (err: any) {
-            const msg = err.message ?? "Failed to delete user";
-            return unhandledErrorDTO(msg, err.response?.data?.errors);
-        }
-    },
-
-
-
-    // ---------------------------------------------------
     // GET CURRENT USER PROFILE
     // GET /users/me
     // ---------------------------------------------------
