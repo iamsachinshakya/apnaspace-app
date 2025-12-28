@@ -12,6 +12,8 @@ import { useResize } from "@/app/shared/hooks/useResize";
 import { IRegisterData } from "@/app/modules/auth/types/auth.dto";
 import { setBottomSheet } from "@/app/modules/overlays/redux/bottomSheetSlice";
 import { setDialog } from "@/app/modules/overlays/redux/dialogSlice";
+import { authService } from "@/app/modules/auth/services/authService";
+import { showError, showSuccess } from "@/app/modules/common/utils/toast";
 
 interface RegisterContentProps {
   onClose: () => void;
@@ -24,8 +26,6 @@ export const RegisterContent: React.FC<RegisterContentProps> = ({
 }) => {
   const dispatch = useDispatch();
   const { isMobile } = useResize();
-
-  // const { register: registerAction } = useAuthActions();
 
   const {
     register,
@@ -53,12 +53,15 @@ export const RegisterContent: React.FC<RegisterContentProps> = ({
       return;
     }
 
-    // const response = await registerAction(values);
-    // console.log("response =>", response);
-    // if (response) {
-    //   onClose(); // Close register sheet/drawer
-    //   openLoginModal();
-    // }
+    const response = await authService.register(values);
+    console.log("response =>", response);
+    if (!response.success) {
+      showError(response.message);
+      return;
+    }
+    showSuccess(response.message);
+    onClose();
+    openLoginModal();
   };
 
   const handleSwitchToLogin = () => {

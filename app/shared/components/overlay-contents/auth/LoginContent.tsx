@@ -3,7 +3,6 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { X } from "lucide-react";
-
 import { useDispatch } from "react-redux";
 import {
   DialogType,
@@ -13,6 +12,8 @@ import { useResize } from "@/app/shared/hooks/useResize";
 import { setBottomSheet } from "@/app/modules/overlays/redux/bottomSheetSlice";
 import { setDialog } from "@/app/modules/overlays/redux/dialogSlice";
 import { ILoginCredentials } from "@/app/modules/auth/types/auth.dto";
+import { authService } from "@/app/modules/auth/services/authService";
+import { showError, showSuccess } from "@/app/modules/common/utils/toast";
 
 interface LoginContentProps {
   onClose: () => void;
@@ -26,8 +27,6 @@ export const LoginContent: React.FC<LoginContentProps> = ({
   const dispatch = useDispatch();
   const { isMobile } = useResize();
 
-  // const { login } = useAuthActions();
-
   const {
     register,
     handleSubmit,
@@ -35,8 +34,13 @@ export const LoginContent: React.FC<LoginContentProps> = ({
   } = useForm<ILoginCredentials>();
 
   const onSubmit = async (values: ILoginCredentials) => {
-    // const response = await login(values);
-    // if (response) onClose();
+    const response = await authService.login(values, dispatch);
+    if (!response.success) {
+      showError(response.message);
+      return;
+    }
+    showSuccess(response.message);
+    onClose();
   };
 
   const handleSwitchToRegister = () => {

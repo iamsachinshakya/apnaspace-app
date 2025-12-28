@@ -1,3 +1,5 @@
+"use client";
+
 import HomePage from "@/app/modules/home/HomePage";
 
 function page() {

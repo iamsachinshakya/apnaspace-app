@@ -1,5 +1,4 @@
-// import { authReducer } from "@/app/modules/auth/redux/authSlice";
-
+import { authReducer } from "@/app/modules/auth/redux/authSlice";
 import { bottomSheetReducer } from "@/app/modules/overlays/redux/bottomSheetSlice";
 import { dialogReducer } from "@/app/modules/overlays/redux/dialogSlice";
 import { drawerReducer } from "@/app/modules/overlays/redux/drawerSlice";
@@ -13,7 +12,7 @@ export const store = configureStore({
         bottomSheet: bottomSheetReducer,
         dialog: dialogReducer,
         drawer: drawerReducer,
-        // auth: authReducer
+        auth: authReducer
     },
 });
 

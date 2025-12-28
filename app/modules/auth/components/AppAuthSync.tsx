@@ -1,33 +1,33 @@
-// "use client";
+"use client";
 
-// import { useEffect, useRef } from "react";
-// import { useSelector } from "react-redux";
-// import { useAuthActions } from "@/app/modules/auth/actions/authActions";
-// import { selectAuthLoading } from "@/app/modules/auth/redux/authSlice";
-// import Loader from "@/app/shared/components/loader/Loader";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { userService } from "@/app/modules/users/services/userService";
+import { setUserData } from "@/app/modules/auth/redux/authSlice";
 
-// export function AppAuthSync() {
-//   const { getUser } = useAuthActions();
-//   const loading = useSelector(selectAuthLoading);
+export function AppAuthSync() {
+  const dispatch = useDispatch();
 
-//   // Prevents double-execution in React Strict Mode
-//   const hasFetched = useRef(false);
+  useEffect(() => {
+    let isMounted = true;
 
-//   useEffect(() => {
-//     if (hasFetched.current) return;
-//     hasFetched.current = true;
+    const syncAuth = async () => {
+      const response = await userService.getCurrentUserProfile();
 
-//     getUser(); // No need to await — don't block render
-//   }, [getUser]);
+      if (!isMounted) return;
 
-//   // Optional: You can show a loader during initial auth sync
-//   if (loading) {
-//     return (
-//       <div className="min-h-screen flex items-center justify-center bg-black/80">
-//         <Loader />
-//       </div>
-//     );
-//   }
+      if (response.success && response.data) {
+        dispatch(setUserData(response.data));
+      }
+      // ❗ no else block → unauth user is normal
+    };
 
-//   return null;
-// }
+    syncAuth();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [dispatch]);
+
+  return null;
+}

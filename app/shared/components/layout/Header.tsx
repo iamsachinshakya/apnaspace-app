@@ -4,10 +4,19 @@ import React, { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
+
+import { toast } from "sonner";
+import {
+  selectAuthUser,
+  selectAuthLoading,
+  clearUserData,
+} from "@/app/modules/auth/redux/authSlice";
 import { useResize } from "@/app/shared/hooks/useResize";
 import { DialogType } from "@/app/modules/overlays/types/IOverlayTypes";
 import { setBottomSheet } from "@/app/modules/overlays/redux/bottomSheetSlice";
 import { setDialog } from "@/app/modules/overlays/redux/dialogSlice";
+import { authService } from "@/app/modules/auth/services/authService";
+import { showError, showSuccess } from "@/app/modules/common/utils/toast";
 import { UserRole } from "@/app/modules/auth/types/auth.entity";
 
 interface HeaderProps {}
@@ -19,13 +28,8 @@ const Header: React.FC<HeaderProps> = () => {
   const dispatch = useDispatch();
   const { isMobile } = useResize();
 
-  // const user = useSelector(selectAuthUser);
-  // const isLoading = useSelector(selectAuthLoading);
-
-  const user: any = null;
-  const isLoading: boolean = true;
-
-  // const { logout } = useAuthActions();
+  const user = useSelector(selectAuthUser);
+  const isLoading = useSelector(selectAuthLoading);
 
   const openAuthUI = (type: DialogType) => {
     const payload = { show: true, type, mode: null };
@@ -41,7 +45,13 @@ const Header: React.FC<HeaderProps> = () => {
   const onRegisterClick = () => openAuthUI(DialogType.REGISTER);
 
   const handleLogout = async () => {
-    // await logout();
+    const response = await authService.logout();
+    if (!response.success) {
+      showError(response.message);
+      return;
+    }
+    dispatch(clearUserData());
+    showSuccess(response.message);
   };
 
   useEffect(() => {
