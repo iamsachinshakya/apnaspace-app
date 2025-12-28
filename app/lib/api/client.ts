@@ -7,7 +7,7 @@ import { createApiClient } from "./createApiClient";
 export const SERVICE_URLS = {
     API_GATEWAY:
         process.env.NEXT_PUBLIC_API_GATEWAY_URL ??
-        "https://apnaspace-gateway-service.vercel.app",
+        "http://localhost:5000/api/v1",
     AUTH:
         process.env.NEXT_PUBLIC_AUTH_API_URL ??
         "http://localhost:5001/api/v1",
