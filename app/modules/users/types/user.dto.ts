@@ -1,5 +1,6 @@
-import { AuthStatus, UserRole } from "../../auth/models/auth.entity";
-import { ISocialLinks, IUserEntity, IUserPreferences } from "./user.entity";
+import { AuthStatus, UserRole } from "@/app/modules/auth/types/auth.entity";
+import { ISocialLinks, IUserEntity, IUserPreferences } from "@/app/modules/users/types/user.entity";
+
 export interface IUpdateUser {
     fullName: string;
     avatar: string | null;
