@@ -1,4 +1,4 @@
-import { authClient, userClient } from "@/app/lib/api/client";
+import { authApiClient } from "@/app/lib/api/client";
 import { setError, setUserData, startLoading } from "@/app/modules/auth/redux/authSlice";
 import { IAuthDashboard, ILoginCredentials, IRegisterData, IResetPassword } from "@/app/modules/auth/types/auth.dto";
 import { IAuthEntity } from "@/app/modules/auth/types/auth.entity";
@@ -21,8 +21,8 @@ export const authService = {
 
         try {
             // Step 1: Login API
-            const { data } = await authClient.post<HandleResponseDTO<{ user: IUserProfile; accessToken: string; refreshToken: string }>>(
-                "/auth/login",
+            const { data } = await authApiClient.post<HandleResponseDTO<{ user: IUserProfile; accessToken: string; refreshToken: string }>>(
+                "/login",
                 credentials
             );
 
@@ -71,11 +71,11 @@ export const authService = {
     // ---------------------------------------------------
     logout: async (): Promise<HandleResponseDTO<null>> => {
         try {
-            const { data } = await authClient.post<HandleResponseDTO<null>>(
-                "/auth/logout"
+            const { data } = await authApiClient.post<HandleResponseDTO<null>>(
+                "/logout"
             );
 
-            return data; // return DTO
+            return data;
         } catch (err: any) {
             console.error("Logout failed", err);
 
@@ -94,7 +94,7 @@ export const authService = {
         payload: IRegisterData
     ): Promise<HandleResponseDTO<IAuthEntity>> => {
         try {
-            const { data } = await authClient.post<HandleResponseDTO<IAuthEntity>>("/auth/register", payload);
+            const { data } = await authApiClient.post<HandleResponseDTO<IAuthEntity>>("/register", payload);
             return data;
         } catch (err: any) {
             const msg = err.message ?? "Registration failed";
@@ -109,7 +109,7 @@ export const authService = {
         payload: IResetPassword
     ): Promise<HandleResponseDTO<null>> => {
         try {
-            const { data } = await authClient.post<HandleResponseDTO<null>>("/auth/reset-password", payload);
+            const { data } = await authApiClient.post<HandleResponseDTO<null>>("/reset-password", payload);
             if (data.success) return handleSuccessDTO(null, "Password reset successful");
             return handleErrorDTO(data.message || "Password reset failed", data.statusCode, data.errors, data.meta);
         } catch (err: any) {
@@ -132,8 +132,8 @@ export const authService = {
             if (query?.sortOrder) queryParams.append("sortOrder", query.sortOrder)
 
             const { data } =
-                await authClient.get<HandleResponseDTO<PaginatedData<IAuthDashboard>>>(
-                    `/auth/users?${queryParams.toString()}`
+                await authApiClient.get<HandleResponseDTO<PaginatedData<IAuthDashboard>>>(
+                    `/users?${queryParams.toString()}`
                 );
             return data;
         } catch (err: any) {
@@ -154,8 +154,8 @@ export const authService = {
     ): Promise<HandleResponseDTO<IAuthDashboard>> => {
         try {
             const { data } =
-                await authClient.patch<HandleResponseDTO<IAuthDashboard>>(
-                    `/auth/users/${userId}`,
+                await authApiClient.patch<HandleResponseDTO<IAuthDashboard>>(
+                    `/users/${userId}`,
                     payload
                 );
 
@@ -186,8 +186,8 @@ export const authService = {
     ): Promise<HandleResponseDTO<null>> => {
         try {
             const { data } =
-                await authClient.delete<HandleResponseDTO<null>>(
-                    `/auth/users/${userId}`
+                await authApiClient.delete<HandleResponseDTO<null>>(
+                    `/users/${userId}`
                 );
             return data;
         } catch (err: any) {
@@ -234,6 +234,5 @@ export const authService = {
             );
         }
     }
-
 
 };
