@@ -1,5 +1,10 @@
 "use client";
 
+import { AddBlogContent } from "@/app/modules/dashboard/components/modals/contents/AddBlogContent";
+import { AddCategoryContent } from "@/app/modules/dashboard/components/modals/contents/AddCategoryContent";
+import { AddCommentContent } from "@/app/modules/dashboard/components/modals/contents/AddCommentContent";
+import { AddProfileContent } from "@/app/modules/dashboard/components/modals/contents/AddProfileContent";
+import { AddUserContent } from "@/app/modules/dashboard/components/modals/contents/AddUserContent";
 import {
   clearDialog,
   getDialogState,
@@ -75,27 +80,27 @@ export default function DialogWrapper() {
       <SubscribeContent onClose={closeModal} data={dialogState} />
     ),
 
-    // [DialogType.ADD_BLOG]: (
-    //   <AddBlogContent onClose={closeModal} data={dialogState} />
-    // ),
+    [DialogType.ADD_BLOG]: (
+      <AddBlogContent onClose={closeModal} data={dialogState} />
+    ),
 
-    // [DialogType.ADD_CATEGORY]: (
-    //   <AddCategoryContent onClose={closeModal} data={dialogState} />
-    // ),
+    [DialogType.ADD_CATEGORY]: (
+      <AddCategoryContent onClose={closeModal} data={dialogState} />
+    ),
 
-    // [DialogType.ADD_COMMENT]: (
-    //   <AddCommentContent onClose={closeModal} data={dialogState} />
-    // ),
+    [DialogType.ADD_COMMENT]: (
+      <AddCommentContent onClose={closeModal} data={dialogState} />
+    ),
 
-    // [DialogType.ADD_PROFILE]: (
-    //   <AddProfileContent onClose={closeModal} data={dialogState} />
-    // ),
+    [DialogType.ADD_PROFILE]: (
+      <AddProfileContent onClose={closeModal} data={dialogState} />
+    ),
+    [DialogType.ADD_USER]: (
+      <AddUserContent onClose={closeModal} data={dialogState} />
+    ),
 
     // [DialogType.RESET_PASSWORD]: (
     //   <ResetPasswordContent onClose={closeModal} data={dialogState} />
-    // ),
-    // [DialogType.ADD_USER]: (
-    //   <AddUserModalContent onClose={closeModal} data={dialogState} />
     // ),
   };
 

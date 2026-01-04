@@ -1,10 +1,28 @@
 import { AuthStatus, UserRole } from "./auth.entity";
 
+export interface IAuthFormData {
+    id?: string;        // present only in edit mode
+    username: string;
+    email: string;
+    password?: string; // present only in create mode
+    role: UserRole;
+    status: AuthStatus;
+}
+
+export interface IUpdateAuth {
+    username?: string;
+    email?: string;
+    role?: UserRole;
+    status?: AuthStatus;
+    isVerified?: boolean;
+}
+
 export interface IRegisterData {
     username: string;
     email: string;
     password: string;
     role?: UserRole;
+    status?: AuthStatus;
     agreeToTerms?: boolean;
 }
 
@@ -31,16 +49,6 @@ export interface IAuthUser {
     isVerified: boolean;
 }
 
-export interface IUpdateAuth {
-    username?: string;
-    email?: string;       // UNIQUE, login identifier
-    role?: UserRole;
-    status?: AuthStatus;
-    isVerified?: boolean;
-    password?: string;
-}
-
-
 export interface IAuthDashboard {
     id: string;
     username: string;        // UNIQUE, login identifier
@@ -51,3 +59,4 @@ export interface IAuthDashboard {
     createdAt: Date;
     updatedAt: Date;
 }
+

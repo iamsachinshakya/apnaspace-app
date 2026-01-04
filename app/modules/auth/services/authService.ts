@@ -1,6 +1,6 @@
 import { authApiClient } from "@/app/lib/api/client";
 import { setError, setUserData, startLoading } from "@/app/modules/auth/redux/authSlice";
-import { IAuthDashboard, ILoginCredentials, IRegisterData, IResetPassword } from "@/app/modules/auth/types/auth.dto";
+import { IAuthDashboard, IAuthFormData, ILoginCredentials, IRegisterData, IResetPassword } from "@/app/modules/auth/types/auth.dto";
 import { IAuthEntity } from "@/app/modules/auth/types/auth.entity";
 import { IQueryParams, PaginatedData } from "@/app/modules/common/types/common.dto";
 import { handleErrorDTO, HandleResponseDTO, handleSuccessDTO, unhandledErrorDTO } from "@/app/modules/common/utils/apiResponse";
@@ -102,6 +102,18 @@ export const authService = {
         }
     },
 
+    createUser: async (
+        payload: IAuthFormData
+    ): Promise<HandleResponseDTO<IAuthEntity>> => {
+        try {
+            const { data } = await authApiClient.post<HandleResponseDTO<IAuthEntity>>("/register", payload);
+            return data;
+        } catch (err: any) {
+            const msg = err.message ?? "Registration failed";
+            return unhandledErrorDTO(msg, err.response?.data?.errors);
+        }
+    },
+
     // ---------------------------------------------------
     // RESET PASSWORD
     // ---------------------------------------------------
@@ -122,7 +134,7 @@ export const authService = {
        GET ALL AUTH USERS (ADMIN)
        GET /api/v1/auth/users
     --------------------------------------------------- */
-    getAllUsers: async (query: IQueryParams): Promise<HandleResponseDTO<PaginatedData<IAuthDashboard>>> => {
+    getAllAuthUsers: async (query: IQueryParams): Promise<HandleResponseDTO<PaginatedData<IAuthDashboard>>> => {
         try {
             const queryParams = new URLSearchParams();
             if (query?.page) queryParams.append("page", query.page.toString());

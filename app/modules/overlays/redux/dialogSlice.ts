@@ -1,7 +1,6 @@
 import { createInitialOverlayData, DialogState, OverlayData } from "@/app/modules/overlays/types/IOverlayTypes";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-
 const initialState: DialogState = {
   dialog: createInitialOverlayData()
 };
