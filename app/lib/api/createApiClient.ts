@@ -22,6 +22,7 @@ export const createApiClient = (
     baseURL: string,
     options?: {
         refreshClient?: AxiosInstance;
+        prefix?: string;
     }
 ): AxiosInstance => {
     const apiClient = axios.create({
@@ -39,8 +40,7 @@ export const createApiClient = (
 
     const processQueue = (error: any) => {
         failedQueue.forEach(({ resolve, reject }) => {
-            if (error) reject(error);
-            else resolve(true);
+            error ? reject(error) : resolve(true);
         });
         failedQueue = [];
     };
@@ -51,8 +51,12 @@ export const createApiClient = (
     apiClient.interceptors.request.use(
         (config: InternalAxiosRequestConfig) => {
             const startTime = Date.now();
-
             (config as any).metadata = { startTime };
+
+            // 👇 Prefix routing for API Gateway
+            if (options?.prefix && config.url && !config.url.startsWith(options.prefix)) {
+                config.url = `${options.prefix}${config.url}`;
+            }
 
             console.log(
                 `📤 API REQUEST → [${config.method?.toUpperCase()}] ${config.url}`,
@@ -60,7 +64,6 @@ export const createApiClient = (
                     baseURL: config.baseURL,
                     params: config.params,
                     data: safeStringify(config.data),
-                    headers: config.headers,
                 }
             );
 
@@ -97,10 +100,6 @@ export const createApiClient = (
                 metadata?: any;
             };
 
-            const duration = originalRequest?.metadata
-                ? Date.now() - originalRequest.metadata.startTime
-                : null;
-
             const errorCode = error.response?.data?.errorCode;
 
             console.error(`🔥 API ERROR ← ${originalRequest?.url}`, {
@@ -108,7 +107,6 @@ export const createApiClient = (
                 errorCode,
                 message: error.message,
                 data: error.response?.data,
-                duration: duration ? `${duration}ms` : null,
             });
 
             /* ----------------------------------------------------
